@@ -51,9 +51,24 @@ data "aws_ebs_volume" "root_volume" {
 }
 
 # Iterate over attached volumes
-resource "aws_ebs_snapshot" "volume_snapshots" {
+resource "aws_ebs_snapshot" "volume_snapshots1" {
   provider = aws.aws_lab
   for_each = toset(data.aws_instance.target_instance.ebs_block_device[*].volume_id)
+  # for_each = toset(data.aws_instance.target_instance.root_block_device[*].volume_id)
+
+  volume_id = each.value
+  tags = {
+    Name        = "Snapshot-${each.value}"
+    CreatedBy   = "Terraform"
+    Description = "Snapshot of volume ${each.value} for instance ${data.aws_instance.target_instance.id}"
+  }
+}
+
+# Iterate over attached root volumes
+resource "aws_ebs_snapshot" "volume_snapshots2" {
+  provider = aws.aws_lab
+  # for_each = toset(data.aws_instance.target_instance.ebs_block_device[*].volume_id)
+  for_each = toset(data.aws_instance.target_instance.root_block_device[*].volume_id)
 
   volume_id = each.value
   tags = {
