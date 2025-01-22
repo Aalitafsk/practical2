@@ -63,7 +63,7 @@ resource "aws_ebs_snapshot" "volume_snapshots" {
   tags = {
     Name        = "Snapshot-${each.value}"
     CreatedBy   = "Terraform"
-    Description = "Snapshot of volume ${each.value} for instance ${data.aws_instance.example.id}"
+    Description = "Snapshot of volume ${each.value} for instance ${data.aws_instance.target_instance.id}"
   }
 }
 
