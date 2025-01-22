@@ -28,12 +28,26 @@ provider "aws" {
 # Data source to get EC2 instance details
 data "aws_instance" "target_instance" {
   provider    = aws.aws_lab
-  instance_id = "i-00eb66bae41ed8e8e" # Replace with your instance ID
+  instance_id = "i-0491c860326630d74" # Replace with your instance ID
 }
 
 # Output instance details for debugging
 output "instance_details" {
   value = data.aws_instance.target_instance
+}
+
+# Data source to retrieve the root volume
+data "aws_ebs_volume" "root_volume" {
+  provider = aws.aws_lab
+  filter {
+    name   = "attachment.instance-id"
+    values = [data.aws_instance.target_instance.id]
+  }
+
+  filter {
+    name   = "attachment.device"
+    values = [data.aws_instance.target_instance.root_device_name]
+  }
 }
 
 # Iterate over attached volumes
