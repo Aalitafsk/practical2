@@ -31,27 +31,7 @@ data "aws_instance" "target_instance" {
   instance_id = "i-0491c860326630d74" # Replace with your instance ID
 }
 
-# Output instance details for debugging
-output "instance_details" {
-  value = data.aws_instance.target_instance
-}
-/*
-# Data source to retrieve the root volume
-data "aws_ebs_volume" "root_volume" {
-  provider = aws.aws_lab
-  filter {
-    name   = "attachment.instance-id"
-    values = [data.aws_instance.target_instance.id]
-  }
-
-  filter {
-    name   = "attachment.device"
-    values = [data.aws_instance.target_instance.root_device_name]
-  }
-}
-*/
-
-# Iterate over attached volumes
+# Iterate over attached EBS-volumes
 resource "aws_ebs_snapshot" "volume_snapshots1" {
   provider = aws.aws_lab
   for_each = toset(data.aws_instance.target_instance.ebs_block_device[*].volume_id)
@@ -65,7 +45,7 @@ resource "aws_ebs_snapshot" "volume_snapshots1" {
   }
 }
 
-# Iterate over attached root volumes
+# Iterate over attached root-volumes
 resource "aws_ebs_snapshot" "volume_snapshots2" {
   provider = aws.aws_lab
   # for_each = toset(data.aws_instance.target_instance.ebs_block_device[*].volume_id)
@@ -79,9 +59,17 @@ resource "aws_ebs_snapshot" "volume_snapshots2" {
   }
 }
 
-/*
-# Output all snapshots
-output "snapshots" {
-  value = { for k, v in aws_ebs_snapshot.volume_snapshots : k => v.id }
+# Output instance details for debugging
+output "instance_details" {
+  value = data.aws_instance.target_instance
 }
-*/
+
+# Output attached EBS-volumes snapshots
+output "root-volumes-snapshots" {
+  value = aws_ebs_snapshot.volume_snapshots1
+}
+
+# Output all root-volumes snapshots
+output "root-volumes-snapshots" {
+  value = aws_ebs_snapshot.volume_snapshots2
+}
