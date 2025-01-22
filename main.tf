@@ -43,6 +43,15 @@ data "aws_instance" "target_instance" {
   instance_id = "i-013e6c98aa223a783" # Replace with your instance ID
 }
 
+# All attached volumes to the speficed ec2
+data "aws_ebs_volumes" "attached_volumes"{
+  provider = aws.aws_lab
+  filter {
+    name   = "attachment.instance-id"
+    values = [data.aws_instance.target_instance.id]
+  }
+}
+
 # Create snapshots for all attached volumes
 resource "aws_ebs_snapshot" "volume_snapshots" {
   for_each = tomap({ 
