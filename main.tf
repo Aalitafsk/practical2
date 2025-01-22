@@ -35,7 +35,7 @@ data "aws_instance" "target_instance" {
 output "instance_details" {
   value = data.aws_instance.target_instance
 }
-
+/*
 # Data source to retrieve the root volume
 data "aws_ebs_volume" "root_volume" {
   provider = aws.aws_lab
@@ -49,6 +49,7 @@ data "aws_ebs_volume" "root_volume" {
     values = [data.aws_instance.target_instance.root_device_name]
   }
 }
+*/
 
 # Iterate over attached volumes
 resource "aws_ebs_snapshot" "volume_snapshots1" {
@@ -78,7 +79,9 @@ resource "aws_ebs_snapshot" "volume_snapshots2" {
   }
 }
 
+/*
 # Output all snapshots
 output "snapshots" {
   value = { for k, v in aws_ebs_snapshot.volume_snapshots : k => v.id }
 }
+*/
