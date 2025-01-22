@@ -65,7 +65,7 @@ output "instance_details" {
 }
 
 # Output attached EBS-volumes snapshots
-output "root-volumes-snapshots" {
+output "attached-EBS-volumes-snapshots" {
   value = aws_ebs_snapshot.volume_snapshots1
 }
 
