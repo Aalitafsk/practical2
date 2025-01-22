@@ -54,6 +54,7 @@ data "aws_ebs_volumes" "attached_volumes"{
 
 # Create snapshots for all attached volumes
 resource "aws_ebs_snapshot" "volume_snapshots" {
+  provider = aws.aws_lab
   for_each = tomap({ 
     // for idx, volume_id in data.aws_instance.target_instance.ebs_block_device[*].volume_id : 
     // idx => volume_id
