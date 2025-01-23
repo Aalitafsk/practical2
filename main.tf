@@ -59,6 +59,26 @@ resource "aws_ebs_snapshot" "volume_snapshots2" {
   }
 }
 
+# copy the snapshot to the mumbai region 
+resource "aws_ebs_snapshot_copy" "example_copy" {
+  source_snapshot_id = aws_ebs_snapshot.volume_snapshots2.id
+  source_region      = "us-east-2"
+
+  tags = {
+    Name = "HelloWorld_copy_snap"
+  }
+}
+
+# Create volume from the snapshot in the mumbai region 
+resource "aws_ebs_volume" "example" {
+  availability_zone = "ap-south-1"
+  size              = 40
+
+  tags = {
+    Name = "HelloWorld"
+  }
+}
+
 # Output instance details for debugging
 output "instance_details" {
   value = data.aws_instance.target_instance
