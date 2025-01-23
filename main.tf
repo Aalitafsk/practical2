@@ -28,7 +28,7 @@ provider "aws" {
 # Data source to get EC2 instance details
 data "aws_instance" "target_instance" {
   provider    = aws.aws_lab
-  instance_id = "i-0491c860326630d74" # Replace with your instance ID
+  instance_id = "i-066960cfc31b46076" # Replace with your instance ID
 }
 
 # Iterate over attached EBS-volumes
