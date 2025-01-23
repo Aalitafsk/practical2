@@ -25,6 +25,11 @@ provider "aws" {
   region  = "us-east-2"
 }
 
+provider "aws" {
+  alias   = "aws_lab2"
+  region  = "ap-south-1"
+}
+
 # Data source to get EC2 instance details
 data "aws_instance" "target_instance" {
   provider    = aws.aws_lab
@@ -59,9 +64,11 @@ resource "aws_ebs_snapshot" "volume_snapshots2" {
   }
 }
 
-# copy the snapshot to the mumbai region 
+# copy the snapshot to the mumbai region
 resource "aws_ebs_snapshot_copy" "example_copy" {
-  source_snapshot_id = aws_ebs_snapshot.volume_snapshots2.id
+  provider = aws.aws_lab2
+  for_each = aws_ebs_snapshot.volume_snapshots2
+  source_snapshot_id = each.value.id
   source_region      = "us-east-2"
 
   tags = {
@@ -69,10 +76,11 @@ resource "aws_ebs_snapshot_copy" "example_copy" {
   }
 }
 
-# Create volume from the snapshot in the mumbai region 
+# Create volume from the snapshot in the mumbai region
 resource "aws_ebs_volume" "example" {
-  availability_zone = "ap-south-1"
-  size              = 40
+  provider = aws.aws_lab2
+  availability_zone = "ap-south-1a"
+  size              = 4
 
   tags = {
     Name = "HelloWorld"
